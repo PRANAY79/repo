@@ -1,0 +1,30 @@
+NAGIOS IN DOCKER — WINDOWS CMD / POWERSHELL
+
+IMPORTANT: correct image is jasonrivers/nagios (NOT jsonrivers/nagios).
+
+docker pull jasonrivers/nagios:latest
+docker run -d --name nagios -p 8888:80 jasonrivers/nagios:latest
+docker ps
+docker logs nagios
+
+OPEN: http://localhost:8888/nagios
+Default credentials vary by image/version. Check the image documentation or container startup logs; do not assume a password.
+
+CHECK / MANAGE:
+docker ps -a
+docker logs -f nagios
+docker exec -it nagios bash
+docker stop nagios
+docker start nagios
+docker restart nagios
+
+REMOVE AND RECREATE:
+docker stop nagios
+docker rm nagios
+docker run -d --name nagios -p 8888:80 jasonrivers/nagios:latest
+
+ERRORS:
+- pull access denied: check spelling and image availability.
+- name already in use: docker rm -f nagios (destroys container; not persistent volumes).
+- port already allocated: use -p 8889:80 then http://localhost:8889/nagios.
+- Cannot access dashboard: docker ps; docker logs nagios; wait for service startup.

@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Checkout stage: add Git SCM checkout if needed'
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'Building project'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing project'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deployment demonstration'
+            }
+        }
+    }
+    post {
+        success { echo 'Pipeline SUCCESS' }
+        failure { echo 'Pipeline FAILED' }
+    }
+}

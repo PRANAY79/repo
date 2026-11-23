@@ -1,0 +1,31 @@
+DOCKER TOMCAT — MINIMUM 3-LINE Dockerfile
+
+Create a file named Dockerfile (NO .txt extension):
+
+FROM tomcat:9.0
+COPY target/*.war /usr/local/tomcat/webapps/ROOT.war
+EXPOSE 8080
+
+NOTE: For a Maven WAR project, first run: mvn clean package
+If your project builds a JAR rather than a WAR, this Dockerfile will NOT work.
+Tomcat 9 is for javax.servlet apps; for Jakarta Servlet apps use Tomcat 10.1.
+
+BUILD AND RUN (Windows CMD / PowerShell):
+docker build -t mytomcat .
+docker run -d --name tomcatapp -p 8080:8080 mytomcat
+docker ps
+docker logs tomcatapp
+Open: http://localhost:8080
+
+STOP / DELETE / REBUILD:
+docker stop tomcatapp
+docker rm tomcatapp
+docker build -t mytomcat .
+docker run -d --name tomcatapp -p 8080:8080 mytomcat
+
+TROUBLESHOOT:
+docker images
+docker ps -a
+docker logs tomcatapp
+If COPY fails: check target folder for .war; run mvn clean package.
+If port busy: change -p 8081:8080 and open localhost:8081.

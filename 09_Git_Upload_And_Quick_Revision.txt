@@ -1,0 +1,30 @@
+GIT UPLOAD — WINDOWS CMD
+
+Open CMD inside the SE_LAB_EXAM_COMMANDS folder:
+git init
+git add .
+git commit -m "Add SE lab exam command reference"
+git branch -M main
+
+Create an EMPTY GitHub repo first (without README).
+git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git push -u origin main
+
+IF origin already exists:
+git remote -v
+git remote set-url origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git push -u origin main
+
+IF 'nothing to commit': git status
+IF 'src refspec main does not match any': make a commit first.
+IF push rejected because remote has commits: inspect remote history before pulling/merging; do not force push blindly.
+
+EXAM FAST CHECKLIST:
+Docker: docker build -> docker run -> docker ps -> browser -> docker logs.
+Compose: docker compose up -d -> docker compose ps -> browser -> redis-cli ping.
+K8s: minikube start -> create deployment -> expose -> scale -> delete pod -> get pods.
+Nagios: docker pull -> docker run -> browser -> docker logs.
+AWS: sudo apt update -> install apache2 -> enable/start -> tee index.html -> public IP.
+Jenkins: start -> unlock -> create job -> build -> Console Output.
+
+CAUTION: Use this as a practice reference only where your exam rules permit external notes/GitHub access.

@@ -1,0 +1,47 @@
+AWS EC2 — UBUNTU WEB SERVER (STARTING WITH sudo apt update)
+
+AWS CONSOLE BEFORE COMMANDS:
+1. EC2 > Launch instance > Ubuntu Server.
+2. Choose instance type, create/select key pair.
+3. Security group: SSH TCP 22 from YOUR IP; HTTP TCP 80 from appropriate source.
+4. Launch, wait for running + status checks, copy Public IPv4 address.
+5. Connect via EC2 Instance Connect OR SSH:
+   ssh -i "your-key.pem" ubuntu@YOUR_PUBLIC_IP
+   On Windows PowerShell, use the full path to your key if needed.
+
+RUN INSIDE UBUNTU TERMINAL:
+sudo apt update
+sudo apt upgrade -y
+sudo apt install apache2 -y
+sudo systemctl start apache2
+sudo systemctl enable apache2
+sudo systemctl status apache2 --no-pager
+
+CREATE SIMPLE WEB PAGE:
+echo '<h1>Welcome to AWS EC2</h1><p>SE Lab Practical</p>' | sudo tee /var/www/html/index.html
+
+VERIFY:
+curl http://localhost
+sudo systemctl is-active apache2
+Open: http://YOUR_PUBLIC_IP
+
+OPTIONAL GIT / JAVA / MAVEN (ONLY IF ASKED):
+sudo apt install git -y
+sudo apt install openjdk-17-jdk -y
+java -version
+sudo apt install maven -y
+mvn -version
+
+IF QUESTION ASKS NGINX INSTEAD OF APACHE:
+sudo systemctl stop apache2
+sudo apt install nginx -y
+sudo systemctl enable --now nginx
+sudo systemctl status nginx --no-pager
+
+COMMON ERRORS:
+- Connection timeout: verify EC2 running, public IP, and inbound rules for SSH 22 / HTTP 80.
+- Permission denied (publickey): verify username ubuntu, correct .pem and key pair.
+- Browser unreachable: sudo systemctl status apache2; check port 80 security group.
+- Apache vs Nginx conflict: do not run both on port 80 at once.
+
+COST: Stop or terminate lab instances when finished. Termination is destructive; EBS/public IPv4 may have charges depending on setup.

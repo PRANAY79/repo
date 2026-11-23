@@ -1,0 +1,31 @@
+DOCKER COMPOSE — WORDPRESS + MYSQL + REDIS
+
+Save 02_Docker_Compose_WordPress_MySQL_Redis.yml as docker-compose.yml in a working folder.
+These passwords are EXAM-ONLY examples; change them for real deployments.
+
+COMMANDS:
+docker compose version
+docker compose up -d
+docker compose ps
+docker compose logs -f wordpress
+Open http://localhost:8080
+
+TEST MYSQL:
+docker compose exec db mysql -uwpuser -pwp_pass_123 wordpress
+At mysql> prompt: SHOW TABLES;
+Exit: exit
+
+TEST REDIS:
+docker compose exec redis redis-cli ping
+Expected: PONG
+
+STOP / RESTART:
+docker compose stop
+docker compose start
+docker compose down
+
+WARNING: docker compose down -v deletes the named volumes and database data.
+
+IF EXAM ASKS ONLY WORDPRESS + MYSQL: remove redis service and redis_data volume.
+If port 8080 is occupied, change "8080:80" to "8081:80".
+If WordPress says database connection error, check docker compose logs db and verify environment variables.

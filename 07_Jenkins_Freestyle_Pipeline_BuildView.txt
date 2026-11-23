@@ -1,0 +1,76 @@
+JENKINS — FREESTYLE + PIPELINE + BUILD PIPELINE VIEW
+
+
+
+
+node {
+    stage('Clone') {
+        git branch: 'main', url: 'https://github.com/USERNAME/REPO.git'
+    }
+
+    stage('Build') {
+        bat 'mvn clean compile'
+    }
+
+    stage('Test') {
+        bat 'mvn test'
+    }
+
+    stage('Deploy') {
+        bat 'mvn package'
+    }
+}
+
+
+
+
+A) START JENKINS IN DOCKER (WINDOWS):
+docker pull jenkins/jenkins:lts-jdk17
+docker run -d --name jenkins -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts-jdk17
+docker ps
+docker logs jenkins
+docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+Open http://localhost:8080
+Install suggested plugins, create admin user.
+NOTE: Jenkins official container may not have Maven installed; use a Maven-capable agent or configure Maven tools before Maven builds.
+
+B) FREESTYLE JOB:
+Dashboard > New Item > Enter name > Freestyle project > OK.
+Source Code Management > Git > paste repository HTTPS URL.
+Branches to build: */main (or your actual branch).
+Build Steps > Add build step > Execute shell (Linux agent):
+  echo 'Jenkins freestyle build'
+  git --version
+For Windows agent select Execute Windows batch command:
+  echo Jenkins freestyle build
+  git --version
+Save > Build Now > Build History > Console Output.
+
+C) MAVEN FREESTYLE (ONLY IF MAVEN INSTALLED/CONFIGURED):
+Manage Jenkins > Tools > Maven installations > configure Maven.
+New Item > Freestyle > Git repository > Build Steps > Invoke top-level Maven targets.
+Goals: clean package
+Save > Build Now > Console Output.
+Ensure pom.xml exists in repo and correct working directory.
+
+D) PIPELINE JOB:
+New Item > name > Pipeline > OK.
+Pipeline > Definition: Pipeline script > paste Jenkinsfile from 08_Jenkinsfile.
+Save > Build Now > Console Output.
+If using Git repo: Definition > Pipeline script from SCM > Git > URL > branch */main > Script Path Jenkinsfile.
+
+E) BUILD PIPELINE VIEW:
+Manage Jenkins > Plugins > Available plugins > search Build Pipeline > install Build Pipeline plugin (if compatible).
+Create separate upstream and downstream freestyle jobs.
+In upstream job > Post-build Actions > Build other projects > downstream job name > Save.
+Dashboard > New View (or +) > Build Pipeline View > name > OK.
+Select initial/upstream job > Save. Start upstream build and inspect view.
+Plugin UI differs across versions; if Build Pipeline View is unavailable, verify installation and restart if prompted.
+
+F) COMMON FIXES:
+- Port 8080 already used by Tomcat/WordPress: use -p 8081:8080 for Jenkins.
+- git not found: install Git on agent or configure Jenkins tools.
+- mvn not found: install Maven on agent / configure tools, or use a Maven Docker agent.
+- Build fails: inspect Console Output; verify Git URL, branch, credentials, pom.xml.
+- Jenkins won't start: docker logs jenkins.
+- To restart: docker restart jenkins.
